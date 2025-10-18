@@ -9,7 +9,7 @@
 
 ## 📋 Assessment Overview
 
-**Candidate:** Jithendra Aluri  
+**Candidate:** Jitendra Aluri  
 **Date:** October 17, 2025  
 **Assessment:** AI Voice Assistant Development  
 
