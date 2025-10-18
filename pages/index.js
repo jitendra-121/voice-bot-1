@@ -216,7 +216,18 @@ export default function Home() {
 
   // Auto-scroll to bottom of conversation
   useEffect(() => {
-    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Use setTimeout to ensure DOM has updated before scrolling
+    const scrollTimeout = setTimeout(() => {
+      if (conversationEndRef.current) {
+        conversationEndRef.current.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
+
+    return () => clearTimeout(scrollTimeout);
   }, [conversation]);
 
   // Start/stop voice recognition
@@ -254,6 +265,15 @@ export default function Home() {
     const newConversation = [...conversation, userMessage];
     setConversation(newConversation);
 
+    // Scroll to show user message
+    setTimeout(() => {
+      conversationEndRef.current?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      });
+    }, 50);
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -280,6 +300,15 @@ export default function Home() {
       // Add assistant response to conversation
       const assistantMessage = { role: 'assistant', content: data.reply };
       setConversation(prev => [...prev, assistantMessage]);
+
+      // Immediately scroll to show the new response
+      setTimeout(() => {
+        conversationEndRef.current?.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest'
+        });
+      }, 150);
 
       // Speak the response using TTS with improved voice
       if ('speechSynthesis' in window && data.reply) {
